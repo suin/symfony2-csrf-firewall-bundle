@@ -83,7 +83,7 @@ class FirewallListener
         /** @var $annotation CSRF */
         $annotation = $this->reader->getMethodAnnotation($method, 'Suin\CSRFFirewallBundle\Annotations\CSRF');
 
-        if ( $annotation->checkIsEnabled() === false ) {
+        if ( $annotation instanceof CSRF and $annotation->checkIsEnabled() === false ) {
             return;
         }
 
