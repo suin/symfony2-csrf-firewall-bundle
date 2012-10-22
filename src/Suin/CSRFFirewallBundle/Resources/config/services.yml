@@ -1,0 +1,21 @@
+parameters:
+    suin.csrf_firewall.token_name: __token__
+services:
+    # public services
+    suin.csrf_firewall.firwall_listener:
+        class: Suin\CSRFFirewallBundle\EventListener\FirewallListener
+        arguments:
+            - %kernel.secret%
+            - %suin.csrf_firewall.token_name%
+        calls:
+            - [ setSession, [ @session ] ]
+            - [ setAnnotationReader, [ @annotation_reader ]]
+            - [ setFormTokenInjector, [ @suin.csrf_firewall.helper.form_token_injector ] ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: -255 }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    # private services
+    suin.csrf_firewall.helper.form_token_injector:
+        class: Suin\CSRFFirewallBundle\Helper\FormTokenInjector
+        public: false
